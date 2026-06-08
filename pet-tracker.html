@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Paw Spend">
+<meta name="theme-color" content="#0f0f11">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.png">
+<title>Paw Spend</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f11;
+    --surface: #17171a;
+    --surface2: #1e1e23;
+    --border: rgba(255,255,255,0.07);
+    --text: #f0ede8;
+    --muted: rgba(240,237,232,0.45);
+    --hint: rgba(240,237,232,0.2);
+    --accent: #c8b89a;
+    --accent2: #7e9e8c;
+    --accent3: #9e7e8c;
+    --pill-vitam: #c8b89a;
+    --pill-food: #7e9e8c;
+    --pill-litter: #9e8c7e;
+    --pill-misc: #8c7e9e;
+    --safe: inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overscroll-behavior: none;
+  }
+
+  .app {
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* STATUS BAR SAFE AREA */
+  .header {
+    padding: env(safe-area-inset-top, 44px) 20px 0;
+    background: var(--bg);
+    flex-shrink: 0;
+  }
+  .header-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-bottom: 16px;
+  }
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+  .logo span { color: var(--accent); font-style: italic; }
+  .month-pill {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 12px;
+    letter-spacing: 0.5px;
+  }
+
+  /* SCROLL AREA */
+  .scroll {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 16px;
+    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 90px);
+  }
+  .scroll::-webkit-scrollbar { display: none; }
+
+  /* HERO CARD */
+  .hero {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 12px;
+    box-shadow: var(--safe);
+  }
+  .hero-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  .hero-label { font-size: 11px; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
+  .hero-amount {
+    font-family: 'DM Serif Display', serif;
+    font-size: 42px;
+    letter-spacing: -1px;
+    line-height: 1;
+    color: var(--text);
+  }
+  .hero-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .hero-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+  .badge {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 12px;
+    white-space: nowrap;
+  }
+  .badge-spent { background: rgba(126,158,140,0.15); color: #7e9e8c; }
+  .badge-remaining { background: rgba(200,184,154,0.12); color: var(--accent); }
+
+  /* STACKED BAR */
+  .bar-section { margin-bottom: 6px; }
+  .bar-track {
+    height: 8px;
+    background: var(--surface2);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    margin-bottom: 10px;
+  }
+  .bar-seg {
+    height: 100%;
+    transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+  }
+  .bar-seg:first-child { border-radius: 8px 0 0 8px; }
+  .bar-seg:last-child { border-radius: 0 8px 8px 0; }
+  .bar-legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .legend-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* DETAILED BAR CHART */
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 12px;
+    box-shadow: var(--safe);
+  }
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .chart-bars { display: flex; flex-direction: column; gap: 10px; }
+  .chart-row { display: flex; align-items: center; gap: 10px; }
+  .chart-name { font-size: 12px; color: var(--muted); width: 72px; flex-shrink: 0; text-align: right; }
+  .chart-bar-wrap { flex: 1; height: 22px; background: var(--surface2); border-radius: 6px; overflow: hidden; position: relative; }
+  .chart-bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding-right: 8px;
+    justify-content: flex-end;
+    transition: width 0.7s cubic-bezier(0.34,1.56,0.64,1);
+    min-width: 2px;
+  }
+  .chart-bar-val { font-size: 10px; font-weight: 500; color: rgba(255,255,255,0.7); white-space: nowrap; }
+  .chart-monthly { font-size: 11px; color: var(--hint); width: 38px; text-align: right; flex-shrink: 0; }
+
+  /* ITEMS LIST */
+  .list-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    box-shadow: var(--safe);
+  }
+  .list-header {
+    padding: 16px 18px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .reset-btn {
+    font-size: 11px;
+    color: var(--hint);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .item {
+    display: flex;
+    align-items: center;
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+    transition: opacity 0.2s, background 0.2s;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .item:last-child { border-bottom: none; }
+  .item.done { opacity: 0.38; }
+  .item:active { background: rgba(255,255,255,0.03); }
+
+  .check {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    background: var(--surface2);
+  }
+  .check.active { background: var(--accent2); border-color: var(--accent2); }
+  .check svg { display: none; }
+  .check.active svg { display: block; }
+
+  .item-body { flex: 1; min-width: 0; }
+  .item-name { font-size: 14px; font-weight: 400; color: var(--text); margin-bottom: 2px; }
+  .item.done .item-name { text-decoration: line-through; }
+  .item-freq { font-size: 11px; color: var(--muted); }
+  .item-tag {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 8px;
+    letter-spacing: 0.3px;
+    flex-shrink: 0;
+  }
+  .item-right { text-align: right; flex-shrink: 0; }
+  .item-price { font-size: 14px; font-weight: 500; color: var(--text); font-family: 'DM Serif Display', serif; }
+  .item-date { font-size: 10px; color: var(--hint); margin-top: 2px; }
+
+  /* DATE MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: flex-end;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--surface);
+    border-radius: 24px 24px 0 0;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    width: 100%;
+    padding: 20px 20px calc(env(safe-area-inset-bottom, 16px) + 16px);
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.32,0.72,0,1);
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal-handle {
+    width: 36px; height: 4px;
+    background: var(--border);
+    border-radius: 4px;
+    margin: 0 auto 20px;
+  }
+  .modal-title { font-family: 'DM Serif Display', serif; font-size: 20px; margin-bottom: 4px; }
+  .modal-sub { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+  .modal-date-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    padding: 13px 16px;
+    margin-bottom: 12px;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .modal-done {
+    width: 100%;
+    background: var(--accent);
+    color: #0f0f11;
+    border: none;
+    border-radius: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 15px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .modal-done:active { opacity: 0.8; }
+
+  /* MISC CARD */
+  .misc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 18px;
+    margin-bottom: 12px;
+    box-shadow: var(--safe);
+  }
+  .misc-row { display: flex; gap: 8px; margin-bottom: 10px; }
+  .misc-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+  .misc-input::placeholder { color: var(--hint); }
+  .misc-price-input {
+    width: 80px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+  .misc-price-input::placeholder { color: var(--hint); }
+  .misc-add {
+    background: var(--accent);
+    color: #0f0f11;
+    border: none;
+    border-radius: 10px;
+    padding: 0 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .misc-add:active { opacity: 0.7; }
+  .misc-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-top: 1px solid var(--border);
+    cursor: pointer;
+    -webkit-user-select: none;
+  }
+  .misc-item.done { opacity: 0.38; }
+  .misc-item-name { flex: 1; font-size: 13px; color: var(--text); }
+  .misc-item.done .misc-item-name { text-decoration: line-through; }
+  .misc-item-price { font-size: 13px; color: var(--muted); }
+  .misc-remove {
+    background: none;
+    border: none;
+    color: var(--hint);
+    font-size: 18px;
+    padding: 0 4px;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  /* TAB BAR */
+  .tabbar {
+    flex-shrink: 0;
+    background: rgba(15,15,17,0.85);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    padding-bottom: env(safe-area-inset-bottom, 8px);
+    position: relative;
+  }
+  .tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 10px 0 8px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    transition: opacity 0.15s;
+  }
+  .tab:active { opacity: 0.6; }
+  .tab-icon { font-size: 20px; line-height: 1; }
+  .tab-label { font-size: 10px; letter-spacing: 0.3px; color: var(--muted); }
+  .tab.active .tab-label { color: var(--accent); }
+  .tab.active .tab-icon { filter: none; }
+
+  /* VIEWS */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero { animation: fadeUp 0.4s ease both; }
+  .chart-card { animation: fadeUp 0.4s 0.05s ease both; }
+  .list-card { animation: fadeUp 0.4s 0.1s ease both; }
+  .misc-card { animation: fadeUp 0.4s 0.1s ease both; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="header-inner">
+      <div class="logo">Paw <span>Spend</span></div>
+      <div class="month-pill" id="month-label"></div>
+    </div>
+  </div>
+
+  <div class="scroll">
+
+    <!-- OVERVIEW VIEW -->
+    <div class="view active" id="view-overview">
+
+      <!-- HERO -->
+      <div class="hero">
+        <div class="hero-top">
+          <div>
+            <div class="hero-label">Monthly estimate</div>
+            <div class="hero-amount" id="hero-amount">$0</div>
+            <div class="hero-sub" id="hero-sub">Loading…</div>
+          </div>
+          <div class="hero-badges">
+            <div class="badge badge-spent" id="badge-spent">$0 spent</div>
+            <div class="badge badge-remaining" id="badge-remaining">$0 left</div>
+          </div>
+        </div>
+        <div class="bar-section">
+          <div class="bar-track" id="bar-track"></div>
+          <div class="bar-legend" id="bar-legend"></div>
+        </div>
+      </div>
+
+      <!-- CHART -->
+      <div class="chart-card">
+        <div class="section-label">Breakdown by item</div>
+        <div class="chart-bars" id="chart-bars"></div>
+      </div>
+
+    </div>
+
+    <!-- ORDERS VIEW -->
+    <div class="view" id="view-orders">
+      <div class="list-card">
+        <div class="list-header">
+          <div class="section-label" style="margin:0">Orders</div>
+          <button class="reset-btn" onclick="resetChecks()">Reset all</button>
+        </div>
+        <div id="items-list"></div>
+      </div>
+
+      <div class="misc-card">
+        <div class="section-label" style="margin-bottom:12px">Misc / treats</div>
+        <div class="misc-row">
+          <input class="misc-input" id="misc-name" placeholder="Item name" />
+          <input class="misc-price-input" id="misc-price" type="number" placeholder="$0" step="0.01" min="0" />
+          <button class="misc-add" onclick="addMisc()">+</button>
+        </div>
+        <div id="misc-list"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- DATE MODAL -->
+  <div class="modal-overlay" id="modal" onclick="closeModal(event)">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title" id="modal-title">Set date</div>
+      <div class="modal-sub" id="modal-sub">When did you last order?</div>
+      <input class="modal-date-input" type="date" id="modal-date" />
+      <button class="modal-done" onclick="saveModal()">Done</button>
+    </div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tabbar">
+    <div class="tab active" id="tab-overview" onclick="switchTab('overview')">
+      <div class="tab-icon">📊</div>
+      <div class="tab-label">Overview</div>
+    </div>
+    <div class="tab" id="tab-orders" onclick="switchTab('orders')">
+      <div class="tab-icon">🛒</div>
+      <div class="tab-label">Orders</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const ITEMS = [
+  { id:1, name:"Multivitamins",         price:16.14, freq:"Every 2 weeks", mult:2,    cat:"vitam" },
+  { id:2, name:"Immune vitamins",        price:15.72, freq:"Every 2 weeks", mult:2,    cat:"vitam" },
+  { id:3, name:"Gut health vitamins",    price:12.22, freq:"Every 2 weeks", mult:2,    cat:"vitam" },
+  { id:4, name:"UTI vitamins",           price:15.72, freq:"Every 2 weeks", mult:2,    cat:"vitam" },
+  { id:5, name:"Nulo dry food",          price:17.99, freq:"Monthly",       mult:1,    cat:"food"  },
+  { id:6, name:"Sheba wet food",         price:49.98, freq:"Monthly",       mult:1,    cat:"food"  },
+  { id:7, name:"Cat litter",             price:20.28, freq:"Every 3 weeks", mult:4/3,  cat:"litter"},
+];
+
+const CATS = {
+  vitam:  { label:"Vitamins", color:"#c8b89a" },
+  food:   { label:"Food",     color:"#7e9e8c" },
+  litter: { label:"Litter",   color:"#9e8c7e" },
+  misc:   { label:"Misc",     color:"#8c7e9e" },
+};
+
+let state = { checked:{}, dates:{}, misc:[] };
+let modalItemId = null;
+
+function load() {
+  try { const s = localStorage.getItem('pawspend2'); if(s) state = JSON.parse(s); } catch(e) {}
+}
+function save() {
+  try { localStorage.setItem('pawspend2', JSON.stringify(state)); } catch(e) {}
+}
+
+function monthlyOf(item) { return item.price * item.mult; }
+
+function totals() {
+  const base = ITEMS.reduce((s,i) => s + monthlyOf(i), 0);
+  const miscTotal = state.misc.reduce((s,m) => s + m.price, 0);
+  const total = base + miscTotal;
+
+  const spent = ITEMS.filter(i => state.checked[i.id]).reduce((s,i) => s + i.price, 0)
+    + state.misc.filter(m => m.checked).reduce((s,m) => s + m.price, 0);
+
+  const catTotals = {};
+  ITEMS.forEach(i => { catTotals[i.cat] = (catTotals[i.cat]||0) + monthlyOf(i); });
+  catTotals.misc = miscTotal;
+
+  return { total, spent, remaining: total - spent, catTotals };
+}
+
+function renderOverview() {
+  const { total, spent, remaining, catTotals } = totals();
+  const miscTotal = state.misc.reduce((s,m)=>s+m.price,0);
+
+  document.getElementById('hero-amount').textContent = '$' + total.toFixed(2);
+  document.getElementById('hero-sub').textContent = ITEMS.length + ' recurring items' + (state.misc.length ? ' + ' + state.misc.length + ' misc' : '');
+  document.getElementById('badge-spent').textContent = '$' + spent.toFixed(2) + ' checked off';
+  document.getElementById('badge-remaining').textContent = '$' + Math.max(0,remaining).toFixed(2) + ' remaining';
+
+  // stacked bar
+  const track = document.getElementById('bar-track');
+  const legend = document.getElementById('bar-legend');
+  track.innerHTML = '';
+  legend.innerHTML = '';
+  Object.entries(catTotals).forEach(([cat, val]) => {
+    if (val <= 0) return;
+    const pct = (val / total * 100).toFixed(1);
+    const seg = document.createElement('div');
+    seg.className = 'bar-seg';
+    seg.style.width = pct + '%';
+    seg.style.background = CATS[cat].color;
+    track.appendChild(seg);
+    const li = document.createElement('div');
+    li.className = 'legend-item';
+    li.innerHTML = `<div class="legend-dot" style="background:${CATS[cat].color}"></div>${CATS[cat].label}`;
+    legend.appendChild(li);
+  });
+
+  // chart
+  const chartBars = document.getElementById('chart-bars');
+  chartBars.innerHTML = '';
+  const maxMonthly = Math.max(...ITEMS.map(i => monthlyOf(i)), ...(state.misc.map(m=>m.price)||[0]));
+
+  ITEMS.forEach(i => {
+    const mo = monthlyOf(i);
+    const pct = (mo / (maxMonthly * 1.1) * 100).toFixed(1);
+    const done = !!state.checked[i.id];
+    const row = document.createElement('div');
+    row.className = 'chart-row';
+    row.innerHTML = `
+      <div class="chart-name">${i.name.split(' ').slice(-1)[0]}</div>
+      <div class="chart-bar-wrap">
+        <div class="chart-bar-fill" style="width:${pct}%;background:${CATS[i.cat].color};opacity:${done?0.35:1}">
+          <span class="chart-bar-val">$${i.price.toFixed(2)}</span>
+        </div>
+      </div>
+      <div class="chart-monthly">$${mo.toFixed(0)}<span style="font-size:9px;opacity:.5">/mo</span></div>
+    `;
+    chartBars.appendChild(row);
+  });
+
+  if (state.misc.length) {
+    state.misc.forEach(m => {
+      const pct = (m.price / (maxMonthly * 1.1) * 100).toFixed(1);
+      const row = document.createElement('div');
+      row.className = 'chart-row';
+      row.innerHTML = `
+        <div class="chart-name">${m.name.slice(0,8)}</div>
+        <div class="chart-bar-wrap">
+          <div class="chart-bar-fill" style="width:${pct}%;background:${CATS.misc.color};opacity:${m.checked?0.35:1}">
+            <span class="chart-bar-val">$${m.price.toFixed(2)}</span>
+          </div>
+        </div>
+        <div class="chart-monthly">$${m.price.toFixed(0)}<span style="font-size:9px;opacity:.5">/mo</span></div>
+      `;
+      chartBars.appendChild(row);
+    });
+  }
+}
+
+function renderOrders() {
+  const list = document.getElementById('items-list');
+  list.innerHTML = '';
+  ITEMS.forEach(i => {
+    const done = !!state.checked[i.id];
+    const dateStr = state.dates[i.id] ? new Date(state.dates[i.id]).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : 'tap to set date';
+    const div = document.createElement('div');
+    div.className = 'item' + (done ? ' done' : '');
+    div.innerHTML = `
+      <div class="check${done?' active':''}">
+        <svg width="12" height="9" viewBox="0 0 12 9" fill="none">
+          <path d="M1 4L4.5 7.5L11 1" stroke="#0f0f11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="item-body">
+        <div class="item-name">${i.name}</div>
+        <div class="item-freq">${i.freq}</div>
+      </div>
+      <div class="item-tag" style="background:${CATS[i.cat].color}22;color:${CATS[i.cat].color}">${CATS[i.cat].label}</div>
+      <div class="item-right" onclick="openModal(event,${i.id})">
+        <div class="item-price">$${i.price.toFixed(2)}</div>
+        <div class="item-date">${dateStr}</div>
+      </div>
+    `;
+    div.addEventListener('click', (e) => {
+      if (e.target.closest('.item-right')) return;
+      state.checked[i.id] = !state.checked[i.id];
+      save(); render();
+    });
+    list.appendChild(div);
+  });
+
+  const miscList = document.getElementById('misc-list');
+  miscList.innerHTML = '';
+  state.misc.forEach((m,idx) => {
+    const div = document.createElement('div');
+    div.className = 'misc-item' + (m.checked?' done':'');
+    div.innerHTML = `
+      <div class="check${m.checked?' active':''}">
+        <svg width="12" height="9" viewBox="0 0 12 9" fill="none">
+          <path d="M1 4L4.5 7.5L11 1" stroke="#0f0f11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="misc-item-name">${m.name}</div>
+      <div class="misc-item-price">$${m.price.toFixed(2)}</div>
+      <button class="misc-remove" onclick="removeMisc(event,${idx})">×</button>
+    `;
+    div.addEventListener('click', (e) => {
+      if(e.target.closest('.misc-remove')) return;
+      state.misc[idx].checked = !state.misc[idx].checked;
+      save(); render();
+    });
+    miscList.appendChild(div);
+  });
+}
+
+function render() {
+  renderOverview();
+  renderOrders();
+}
+
+function openModal(e, itemId) {
+  e.stopPropagation();
+  modalItemId = itemId;
+  const item = ITEMS.find(i => i.id === itemId);
+  document.getElementById('modal-title').textContent = item.name;
+  document.getElementById('modal-sub').textContent = 'When did you last order?';
+  document.getElementById('modal-date').value = state.dates[itemId] || '';
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(e) {
+  if (e.target === document.getElementById('modal')) document.getElementById('modal').classList.remove('open');
+}
+function saveModal() {
+  const val = document.getElementById('modal-date').value;
+  if (modalItemId && val) { state.dates[modalItemId] = val; save(); render(); }
+  document.getElementById('modal').classList.remove('open');
+}
+
+function addMisc() {
+  const name = document.getElementById('misc-name').value.trim();
+  const price = parseFloat(document.getElementById('misc-price').value);
+  if (!name || isNaN(price) || price <= 0) return;
+  state.misc.push({ name, price, checked: false });
+  document.getElementById('misc-name').value = '';
+  document.getElementById('misc-price').value = '';
+  save(); render();
+}
+
+function removeMisc(e, idx) {
+  e.stopPropagation();
+  state.misc.splice(idx, 1);
+  save(); render();
+}
+
+function resetChecks() {
+  state.checked = {};
+  save(); render();
+}
+
+function switchTab(tab) {
+  document.getElementById('view-overview').classList.toggle('active', tab==='overview');
+  document.getElementById('view-orders').classList.toggle('active', tab==='orders');
+  document.getElementById('tab-overview').classList.toggle('active', tab==='overview');
+  document.getElementById('tab-orders').classList.toggle('active', tab==='orders');
+}
+
+// month label
+const now = new Date();
+document.getElementById('month-label').textContent = now.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+
+load();
+render();
+
+// register service worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
