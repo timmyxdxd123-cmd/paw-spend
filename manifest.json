@@ -2,7 +2,7 @@
   "name": "Paw Spend",
   "short_name": "Paw Spend",
   "description": "Pet expense tracker",
-  "start_url": "/index.html",
+  "start_url": "/paw-spend/index.html",
   "display": "standalone",
   "background_color": "#0f0f11",
   "theme_color": "#0f0f11",
