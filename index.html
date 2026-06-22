@@ -17,9 +17,8 @@
   --bg:#08080b;--surface:#101014;--s2:#18181e;--s3:#202028;
   --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.16);
   --text:#f2ede6;--muted:rgba(242,237,230,0.5);--hint:rgba(242,237,230,0.22);
-  /* Vibrant palette */
   --accent:#f0c070;--green:#4ecb8d;--blue:#5ab4f5;--purple:#b07ef5;
-  --danger:#ff6b6b;--warn:#f5a623;--pink:#f06292;
+  --danger:#ff6b6b;--warn:#f5a623;
   --c-vitam:#f0c070;--c-food:#4ecb8d;--c-litter:#5ab4f5;--c-misc:#b07ef5;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -35,7 +34,7 @@ body{color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;overscro
 .month-pill{font-size:11px;font-weight:500;color:var(--muted);background:var(--s2);border:1px solid var(--border);border-radius:20px;padding:5px 12px}
 
 /* SCROLL */
-.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 13px;padding-bottom:calc(env(safe-area-inset-bottom,20px) + 80px)}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 13px;padding-bottom:calc(env(safe-area-inset-bottom,20px) + 100px)}
 .scroll::-webkit-scrollbar{display:none}
 
 /* CARDS */
@@ -49,25 +48,32 @@ body{color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;overscro
 .low-title{font-size:13px;font-weight:600;color:var(--warn);margin-bottom:3px}
 .low-list{font-size:12px;color:rgba(245,166,35,0.75);line-height:1.7}
 
-/* HERO */
-.hero-grid{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-bottom:14px}
-.hero-label{font-size:10px;letter-spacing:1.3px;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
-.hero-amount{font-family:'DM Serif Display',serif;font-size:44px;letter-spacing:-1.5px;line-height:1;color:var(--text)}
-.hero-sub{font-size:12px;color:var(--muted);margin-top:4px}
-
-/* RING */
-.ring-wrap{position:relative;width:76px;height:76px;flex-shrink:0}
+/* ===== HERO BUDGET CARD ===== */
+.budget-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px;margin-bottom:10px;position:relative;overflow:hidden}
+.budget-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 80% -10%,rgba(240,192,112,0.08) 0%,transparent 70%);pointer-events:none}
+.budget-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.budget-left{}
+.budget-label{font-size:10px;letter-spacing:1.3px;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+.budget-amount{font-family:'DM Serif Display',serif;font-size:48px;letter-spacing:-2px;line-height:1;color:var(--text)}
+.budget-amount-sub{font-size:12px;color:var(--muted);margin-top:5px}
+/* RING — now shows $ logged this month vs monthly estimate */
+.ring-wrap{position:relative;width:80px;height:80px;flex-shrink:0}
 .ring-wrap svg{transform:rotate(-90deg)}
-.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.ring-pct{font-size:15px;font-weight:600;color:var(--text)}
-.ring-sub{font-size:9px;color:var(--muted);letter-spacing:0.3px;margin-top:1px}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.ring-pct{font-size:14px;font-weight:600;color:var(--text);line-height:1}
+.ring-sub{font-size:8px;color:var(--muted);letter-spacing:0.3px;margin-top:3px;line-height:1.3}
 
-/* BADGES */
-.badge-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
-.badge{font-size:11px;font-weight:600;padding:5px 11px;border-radius:11px;white-space:nowrap;line-height:1}
-.badge-spent{background:rgba(78,203,141,0.15);color:var(--green)}
-.badge-remaining{background:rgba(240,192,112,0.13);color:var(--accent)}
-.badge-items{background:rgba(255,255,255,0.07);color:var(--muted)}
+/* FIXED vs VARIABLE SPLIT */
+.budget-split{display:flex;gap:8px;margin-bottom:14px}
+.split-pill{flex:1;background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:10px 12px}
+.split-pill-label{font-size:9px;letter-spacing:0.8px;color:var(--muted);text-transform:uppercase;margin-bottom:3px}
+.split-pill-amount{font-family:'DM Serif Display',serif;font-size:20px;color:var(--text);line-height:1}
+.split-pill-sub{font-size:10px;color:var(--hint);margin-top:2px}
+
+/* LOGGED THIS MONTH BADGE */
+.logged-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.logged-label{font-size:11px;color:var(--muted)}
+.logged-amount{font-size:13px;font-weight:600;color:var(--green)}
 
 /* STACKED BAR */
 .bar-track{height:10px;background:var(--s2);border-radius:10px;overflow:hidden;display:flex;margin-bottom:10px;gap:2px}
@@ -82,78 +88,82 @@ body{color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;overscro
 /* SECTION TITLE */
 .section-title{font-size:10px;letter-spacing:1.3px;color:var(--muted);text-transform:uppercase;font-weight:400}
 
-/* CHART ACCORDION */
-.chart-toggle{display:flex;align-items:center;justify-content:space-between;cursor:pointer;-webkit-user-select:none;padding:14px 16px;border-top:1px solid var(--border)}
-.chart-toggle-label{font-size:10px;letter-spacing:1.3px;color:var(--muted);text-transform:uppercase}
-.chart-caret{font-size:13px;color:var(--muted);transition:transform .25s}
-.chart-caret.open{transform:rotate(180deg)}
-.chart-body{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(0.4,0,0.2,1)}
-.chart-body.open{max-height:700px}
-.chart-inner{padding:0 16px 16px}
-.chart-bars{display:flex;flex-direction:column;gap:9px}
-.chart-row{display:flex;align-items:center;gap:9px}
-.chart-name{font-size:11px;color:var(--muted);width:82px;flex-shrink:0;text-align:right;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.chart-bar-wrap{flex:1;height:24px;background:var(--s2);border-radius:6px;overflow:hidden}
-.chart-bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding:0 8px;justify-content:flex-end;transition:width .7s cubic-bezier(0.34,1.56,0.64,1);min-width:4px}
-.chart-bar-val{font-size:10px;font-weight:600;color:rgba(0,0,0,0.75);white-space:nowrap}
-.chart-mo{font-size:10px;color:var(--hint);width:44px;text-align:right;flex-shrink:0}
+/* ===== SPEND BREAKDOWN — redesigned ===== */
+.breakdown-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;margin-bottom:10px}
+.breakdown-header{padding:14px 16px 12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;cursor:pointer;-webkit-user-select:none}
+.breakdown-title{font-size:10px;letter-spacing:1.3px;color:var(--muted);text-transform:uppercase}
+.breakdown-total{font-family:'DM Serif Display',serif;font-size:18px;color:var(--accent)}
+.breakdown-caret{font-size:13px;color:var(--muted);transition:transform .25s;margin-left:8px}
+.breakdown-caret.open{transform:rotate(180deg)}
+.breakdown-body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(0.4,0,0.2,1)}
+.breakdown-body.open{max-height:900px}
+/* Category group rows */
+.bk-cat-group{border-bottom:1px solid var(--border)}
+.bk-cat-group:last-child{border-bottom:none}
+.bk-cat-header{display:flex;align-items:center;gap:10px;padding:12px 16px 8px}
+.bk-cat-bar-left{width:3px;height:28px;border-radius:3px;flex-shrink:0}
+.bk-cat-info{flex:1}
+.bk-cat-name{font-size:12px;font-weight:600;letter-spacing:0.3px}
+.bk-cat-total{font-size:11px;color:var(--muted)}
+.bk-cat-mo{font-family:'DM Serif Display',serif;font-size:17px;text-align:right;flex-shrink:0}
+/* Item rows inside category */
+.bk-item{display:flex;align-items:center;gap:9px;padding:5px 16px 5px 29px}
+.bk-item-name{font-size:12px;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bk-item-bar-wrap{width:80px;height:6px;background:var(--s2);border-radius:4px;overflow:hidden;flex-shrink:0}
+.bk-item-bar-fill{height:100%;border-radius:4px;transition:width .7s cubic-bezier(0.34,1.56,0.64,1)}
+.bk-item-price{font-size:11px;color:var(--hint);width:38px;text-align:right;flex-shrink:0}
+.bk-item-freq{font-size:9px;color:var(--hint);flex-shrink:0}
+.bk-cat-group:last-child .bk-item:last-child{padding-bottom:14px}
 
-/* LIST */
-.list-header{padding:13px 16px 11px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-.reset-btn{font-size:11px;color:var(--hint);background:none;border:1px solid var(--border);border-radius:9px;padding:5px 10px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .15s}
-.reset-btn:active{opacity:.5}
+/* ===== ORDERS — priority list ===== */
+.orders-header-row{padding:13px 16px 11px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.add-item-btn{font-size:11px;font-weight:600;color:#08080b;background:var(--green);border:none;border-radius:9px;padding:5px 11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .15s;white-space:nowrap}
+.add-item-btn:active{opacity:.7}
 
-.item{display:flex;align-items:center;padding:13px 15px;border-bottom:1px solid var(--border);gap:11px;transition:opacity .2s,background .15s;cursor:pointer;-webkit-user-select:none}
-.item:last-child{border-bottom:none}
-.item.done{opacity:.28}
-.item:active{background:rgba(255,255,255,0.03)}
+/* PRIORITY ITEM ROW */
+.pitem{display:flex;align-items:center;padding:12px 15px;border-bottom:1px solid var(--border);gap:11px;-webkit-user-select:none}
+.pitem:last-child{border-bottom:none}
+/* urgency left bar */
+.pitem-bar{width:3px;height:38px;border-radius:3px;flex-shrink:0}
+.pitem-body{flex:1;min-width:0}
+.pitem-name{font-size:14px;color:var(--text);font-weight:400;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pitem-meta{font-size:11px;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.cat-tag{font-size:9px;font-weight:600;padding:2px 7px;border-radius:7px;flex-shrink:0;white-space:nowrap}
+.due-badge{font-size:9px;font-weight:600;padding:2px 6px;border-radius:5px;flex-shrink:0;white-space:nowrap}
+.due-overdue{background:rgba(255,107,107,0.18);color:var(--danger)}
+.due-soon{background:rgba(245,166,35,0.18);color:var(--warn)}
+.due-upcoming{background:rgba(240,192,112,0.18);color:var(--accent)}
+.due-ok{background:rgba(78,203,141,0.13);color:var(--green)}
+.due-unset{background:rgba(255,255,255,0.07);color:var(--hint)}
 
-.check{width:23px;height:23px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;background:var(--s2)}
-.check.on{background:var(--green);border-color:var(--green)}
-.check svg{display:none}
-.check.on svg{display:block}
+.item-edit-btn{background:none;border:none;color:var(--hint);font-size:15px;padding:4px;cursor:pointer;flex-shrink:0;line-height:1;transition:color .15s;border-radius:6px}
+.item-edit-btn:active{color:var(--blue)}
 
-.item-body{flex:1;min-width:0}
-.item-name{font-size:14px;color:var(--text);margin-bottom:3px;font-weight:400}
-.item.done .item-name{text-decoration:line-through;color:var(--muted)}
-.item-meta{font-size:11px;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-
-/* DATE CHIP — vibrant highlight */
-.date-chip{display:inline-flex;flex-direction:column;align-items:flex-end;background:var(--s3);border:1px solid var(--border2);border-radius:10px;padding:7px 10px;cursor:pointer;-webkit-user-select:none;transition:border-color .2s,background .2s;flex-shrink:0;min-width:90px}
+/* DATE CHIP */
+.date-chip{display:inline-flex;flex-direction:column;align-items:flex-end;background:var(--s3);border:1px solid var(--border2);border-radius:10px;padding:7px 10px;cursor:pointer;-webkit-user-select:none;transition:border-color .2s,background .2s;flex-shrink:0;min-width:88px}
 .date-chip:active{border-color:var(--accent);background:rgba(240,192,112,0.08)}
 .date-chip-price{font-family:'DM Serif Display',serif;font-size:18px;color:var(--text);line-height:1;text-align:right}
 .date-chip-date{font-size:10px;font-weight:600;color:var(--accent);margin-top:2px;white-space:nowrap}
 .date-chip-unset{font-size:10px;color:var(--hint);margin-top:2px}
 
-.due-badge{font-size:9px;font-weight:600;padding:2px 6px;border-radius:5px;flex-shrink:0;white-space:nowrap}
-.due-soon{background:rgba(240,192,112,0.2);color:var(--accent)}
-.due-ok{background:rgba(78,203,141,0.15);color:var(--green)}
-.due-overdue{background:rgba(255,107,107,0.18);color:var(--danger)}
-.due-low{background:rgba(245,166,35,0.18);color:var(--warn)}
-
-.cat-tag{font-size:9px;font-weight:600;padding:2px 7px;border-radius:7px;flex-shrink:0;white-space:nowrap}
-
 /* MISC */
 .misc-section{padding:12px 15px}
 .misc-row{display:flex;gap:6px;margin-bottom:9px}
 .misc-input,.misc-price-input{background:var(--s2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:10px 12px;outline:none;transition:border-color .2s}
-.misc-input{flex:1}
-.misc-price-input{width:74px}
+.misc-input{flex:1}.misc-price-input{width:74px}
 .misc-input:focus,.misc-price-input:focus{border-color:var(--border2)}
 .misc-input::placeholder,.misc-price-input::placeholder{color:var(--hint)}
 .misc-add{background:var(--accent);color:#08080b;border:none;border-radius:9px;padding:0 15px;font-size:22px;font-weight:300;cursor:pointer;transition:opacity .15s;font-family:'DM Sans',sans-serif;line-height:1}
 .misc-add:active{opacity:.7}
 .misc-item{display:flex;align-items:center;gap:9px;padding:9px 0;border-top:1px solid var(--border);cursor:pointer;-webkit-user-select:none}
-.misc-item.done{opacity:.3}
 .misc-item-name{flex:1;font-size:13px;color:var(--text)}
-.misc-item.done .misc-item-name{text-decoration:line-through}
 .misc-item-price{font-size:13px;color:var(--muted)}
 .misc-remove{background:none;border:none;color:var(--hint);font-size:20px;padding:0 2px;cursor:pointer;line-height:1;transition:color .15s}
 .misc-remove:active{color:var(--danger)}
 .empty{padding:24px 18px;text-align:center;font-size:13px;color:var(--hint)}
 
 /* HISTORY */
-.history-controls{display:flex;flex-direction:column;gap:0;flex-shrink:0}
+.history-controls{display:flex;flex-direction:column;flex-shrink:0}
 .filter-row{display:flex;gap:6px;padding:10px 13px 6px;overflow-x:auto;flex-shrink:0}
 .filter-row::-webkit-scrollbar{display:none}
 .sort-row{display:flex;gap:6px;padding:0 13px 8px;align-items:center}
@@ -163,14 +173,10 @@ body{color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;overscro
 .filter-btn{font-size:11px;font-weight:500;padding:6px 13px;border-radius:20px;border:1px solid var(--border);background:var(--s2);color:var(--muted);cursor:pointer;white-space:nowrap;-webkit-user-select:none;transition:all .15s;flex-shrink:0}
 .filter-btn.active{background:var(--accent);color:#08080b;border-color:var(--accent)}
 .history-list{display:flex;flex-direction:column;gap:8px;padding:4px 13px 8px}
-.history-group{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
-
-/* MONTH GROUP — new style */
-.month-group{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:0}
+.history-group,.month-group{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
 .month-group-header{padding:12px 15px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--s2)}
 .month-group-name{font-size:14px;font-weight:600;color:var(--text)}
 .month-group-total{font-family:'DM Serif Display',serif;font-size:18px;color:var(--accent)}
-
 .history-group-header{padding:11px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--s2)}
 .history-group-name{font-size:13px;font-weight:500;color:var(--text)}
 .history-group-cat{font-size:9px;font-weight:600;padding:2px 7px;border-radius:7px}
@@ -183,7 +189,17 @@ body{color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;overscro
 .history-del:active{color:var(--danger)}
 .history-empty{padding:40px 20px;text-align:center;font-size:13px;color:var(--hint);line-height:1.9}
 
-/* MODAL */
+/* ===== BUBBLY TABBAR ===== */
+.tabbar{flex-shrink:0;background:rgba(8,8,11,0.95);-webkit-backdrop-filter:blur(28px);backdrop-filter:blur(28px);border-top:1px solid var(--border);padding:10px 12px calc(env(safe-area-inset-bottom,8px)+6px);display:flex;gap:8px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 6px;border-radius:16px;cursor:pointer;-webkit-user-select:none;transition:all .2s cubic-bezier(0.34,1.4,0.64,1);background:transparent;border:1.5px solid transparent;min-height:60px}
+.tab:active{transform:scale(0.93)}
+.tab.active{background:var(--s2);border-color:var(--border2);transform:scale(1.04)}
+.tab-icon{font-size:22px;line-height:1;transition:transform .2s}
+.tab.active .tab-icon{transform:scale(1.12)}
+.tab-label{font-size:11px;font-weight:500;color:var(--muted);transition:color .2s;letter-spacing:0.2px}
+.tab.active .tab-label{color:var(--accent);font-weight:600}
+
+/* MODALS */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.78);display:flex;align-items:flex-end;z-index:100;opacity:0;pointer-events:none;transition:opacity .25s}
 .overlay.open{opacity:1;pointer-events:all}
 .modal{background:var(--surface);border:1px solid var(--border2);border-bottom:none;border-radius:24px 24px 0 0;width:100%;padding:20px 18px calc(env(safe-area-inset-bottom,16px)+16px);transform:translateY(100%);transition:transform .3s cubic-bezier(0.32,0.72,0,1)}
@@ -191,33 +207,44 @@ body{color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;overscro
 .modal-handle{width:36px;height:4px;background:var(--border2);border-radius:4px;margin:0 auto 18px}
 .modal-title{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:2px;color:var(--text)}
 .modal-sub{font-size:12px;color:var(--muted);margin-bottom:16px}
-.modal-field-label{font-size:11px;letter-spacing:0.8px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;font-weight:500}
-.modal-date{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;padding:14px 16px;-webkit-appearance:none;outline:none;transition:border-color .2s}
-.modal-date:focus{border-color:var(--border2)}
-.modal-price-row{display:flex;gap:10px;align-items:center;margin:12px 0 6px}
-.modal-price-label{font-size:11px;letter-spacing:0.8px;color:var(--muted);text-transform:uppercase;font-weight:500;flex-shrink:0}
-.modal-price-input{flex:1;background:var(--s2);border:1px solid var(--border);border-radius:12px;color:var(--accent);font-family:'DM Serif Display',serif;font-size:22px;padding:12px 16px;-webkit-appearance:none;outline:none;transition:border-color .2s}
+.modal-field-label{font-size:11px;letter-spacing:0.8px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;font-weight:500;margin-top:12px}
+.modal-field-label:first-of-type{margin-top:0}
+.modal-input{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;padding:14px 16px;-webkit-appearance:none;outline:none;transition:border-color .2s}
+.modal-input:focus{border-color:var(--border2)}
+.modal-price-input{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:12px;color:var(--accent);font-family:'DM Serif Display',serif;font-size:22px;padding:12px 16px;-webkit-appearance:none;outline:none;transition:border-color .2s}
 .modal-price-input:focus{border-color:var(--accent)}
-.modal-next{font-size:12px;color:var(--muted);margin-bottom:14px;padding:10px 14px;background:var(--s2);border-radius:10px;border:1px solid var(--border);display:none}
+.modal-next{font-size:12px;color:var(--muted);margin-top:10px;padding:10px 14px;background:var(--s2);border-radius:10px;border:1px solid var(--border);display:none}
 .modal-next.show{display:block}
-.modal-done{width:100%;background:var(--accent);color:#08080b;border:none;border-radius:13px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;padding:15px;cursor:pointer;transition:opacity .15s;margin-top:6px}
+.modal-done{width:100%;background:var(--accent);color:#08080b;border:none;border-radius:13px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;padding:15px;cursor:pointer;transition:opacity .15s;margin-top:14px}
 .modal-done:active{opacity:.8}
+.modal-danger{width:100%;background:rgba(255,107,107,0.12);color:var(--danger);border:1px solid rgba(255,107,107,0.25);border-radius:13px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;padding:13px;cursor:pointer;transition:opacity .15s;margin-top:8px}
+.modal-danger:active{opacity:.7}
 
-/* TABBAR */
-.tabbar{flex-shrink:0;background:rgba(8,8,11,0.93);-webkit-backdrop-filter:blur(28px);backdrop-filter:blur(28px);border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom,8px)}
-.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0 7px;cursor:pointer;-webkit-user-select:none;transition:opacity .15s}
-.tab:active{opacity:.5}
-.tab-icon{font-size:20px;line-height:1}
-.tab-label{font-size:10px;color:var(--hint);transition:color .2s;letter-spacing:0.1px}
-.tab.active .tab-label{color:var(--accent)}
+/* Freq + Cat pickers */
+.freq-options{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.freq-opt{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;border:1.5px solid var(--border);cursor:pointer;-webkit-user-select:none;transition:all .15s;background:var(--s2)}
+.freq-opt.sel{border-color:var(--accent);background:rgba(240,192,112,0.08)}
+.freq-opt-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.freq-opt.sel .freq-opt-radio{border-color:var(--accent);background:var(--accent)}
+.freq-opt-radio-dot{width:7px;height:7px;border-radius:50%;background:#08080b;display:none}
+.freq-opt.sel .freq-opt-radio-dot{display:block}
+.freq-opt-label{font-size:14px;color:var(--text)}
+.freq-opt.sel .freq-opt-label{color:var(--accent);font-weight:500}
+.freq-custom-row{display:flex;gap:8px;align-items:center;margin-top:4px}
+.freq-custom-input{flex:1;background:var(--s2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;padding:10px 12px;outline:none;transition:border-color .2s}
+.freq-custom-input:focus{border-color:var(--border2)}
+.freq-custom-label{font-size:13px;color:var(--muted);flex-shrink:0}
+.cat-options{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.cat-opt{padding:8px 14px;border-radius:20px;border:1.5px solid var(--border);cursor:pointer;-webkit-user-select:none;font-size:12px;font-weight:600;transition:all .15s;background:var(--s2);color:var(--muted)}
+.cat-opt.sel{border-color:var(--accent)}
+.name-hold-hint{font-size:11px;color:var(--hint);margin-top:2px}
 
-.view{display:none}
-.view.active{display:block}
-
+.view{display:none}.view.active{display:block}
 @keyframes up{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.budget-card{animation:up .3s ease both}
+.breakdown-card{animation:up .3s .05s ease both}
 .card:nth-child(1){animation:up .3s ease both}
 .card:nth-child(2){animation:up .3s .05s ease both}
-.card:nth-child(3){animation:up .3s .1s ease both}
 .low-banner{animation:up .3s ease both}
 </style>
 </head>
@@ -235,73 +262,98 @@ body{color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;overscro
 
   <!-- OVERVIEW -->
   <div class="view active" id="view-overview">
+
+    <!-- LOW STOCK -->
     <div class="low-banner" id="low-banner">
       <div class="low-icon">⚠️</div>
-      <div>
-        <div class="low-title">Potential Low Stock</div>
-        <div class="low-list" id="low-list"></div>
-      </div>
+      <div><div class="low-title">Order Soon</div><div class="low-list" id="low-list"></div></div>
     </div>
 
-    <div class="card card-pad">
-      <div class="hero-grid">
-        <div>
-          <div class="hero-label">Monthly Estimate</div>
-          <div class="hero-amount" id="hero-amount">$0</div>
-          <div class="hero-sub" id="hero-sub"></div>
+    <!-- BUDGET HERO CARD -->
+    <div class="budget-card">
+      <div class="budget-top">
+        <div class="budget-left">
+          <div class="budget-label">Monthly Estimate</div>
+          <div class="budget-amount" id="hero-amount">$0</div>
+          <div class="budget-amount-sub" id="hero-sub">estimated pet budget</div>
         </div>
         <div class="ring-wrap">
-          <svg width="76" height="76" viewBox="0 0 76 76">
-            <circle cx="38" cy="38" r="32" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="7"/>
-            <circle id="ring-arc" cx="38" cy="38" r="32" fill="none" stroke="var(--green)" stroke-width="7"
-              stroke-linecap="round" stroke-dasharray="201.1" stroke-dashoffset="201.1"
-              style="transition:stroke-dashoffset .8s cubic-bezier(0.34,1.2,0.64,1)"/>
+          <svg width="80" height="80" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="7"/>
+            <circle id="ring-arc" cx="40" cy="40" r="34" fill="none" stroke="var(--green)" stroke-width="7"
+              stroke-linecap="round" stroke-dasharray="213.6" stroke-dashoffset="213.6"
+              style="transition:stroke-dashoffset .9s cubic-bezier(0.34,1.2,0.64,1)"/>
           </svg>
           <div class="ring-center">
-            <div class="ring-pct" id="ring-pct">0%</div>
-            <div class="ring-sub">This Cycle</div>
+            <div class="ring-pct" id="ring-pct">$0</div>
+            <div class="ring-sub">logged<br>this month</div>
           </div>
         </div>
       </div>
-      <div class="badge-row">
-        <div class="badge badge-spent" id="badge-spent">$0 ordered</div>
-        <div class="badge badge-remaining" id="badge-remaining">$0 left</div>
-        <div class="badge badge-items" id="badge-items">0 items</div>
+
+      <!-- FIXED vs VARIABLE SPLIT -->
+      <div class="budget-split">
+        <div class="split-pill">
+          <div class="split-pill-label">Fixed</div>
+          <div class="split-pill-amount" id="split-fixed">$0</div>
+          <div class="split-pill-sub">monthly items</div>
+        </div>
+        <div class="split-pill">
+          <div class="split-pill-label">Variable</div>
+          <div class="split-pill-amount" id="split-variable">$0</div>
+          <div class="split-pill-sub">bi‑weekly &amp; other</div>
+        </div>
+        <div class="split-pill">
+          <div class="split-pill-label">Misc</div>
+          <div class="split-pill-amount" id="split-misc">$0</div>
+          <div class="split-pill-sub">per order</div>
+        </div>
       </div>
+
+      <!-- LOGGED THIS MONTH -->
+      <div class="logged-row">
+        <span class="logged-label">Logged this month from history</span>
+        <span class="logged-amount" id="logged-amount">$0.00</span>
+      </div>
+
+      <!-- STACKED BAR -->
       <div class="bar-track" id="bar-track"></div>
       <div class="bar-legend" id="bar-legend"></div>
     </div>
 
-    <div class="card">
-      <div class="chart-toggle" id="chart-toggle" onclick="toggleChart()">
-        <span class="chart-toggle-label">Spend Breakdown</span>
-        <span class="chart-caret" id="chart-caret">▾</span>
-      </div>
-      <div class="chart-body" id="chart-body">
-        <div class="chart-inner">
-          <div class="chart-bars" id="chart-bars"></div>
+    <!-- SPEND BREAKDOWN — grouped by category -->
+    <div class="breakdown-card">
+      <div class="breakdown-header" onclick="toggleBreakdown()">
+        <span class="breakdown-title">Spend Breakdown</span>
+        <div style="display:flex;align-items:center;gap:4px">
+          <span class="breakdown-total" id="breakdown-total">$0</span>
+          <span class="breakdown-caret" id="breakdown-caret">▾</span>
         </div>
       </div>
+      <div class="breakdown-body" id="breakdown-body">
+        <div id="breakdown-content"></div>
+      </div>
     </div>
+
   </div>
 
-  <!-- ORDERS -->
+  <!-- ORDERS — priority sorted, no check-offs -->
   <div class="view" id="view-orders">
     <div class="card">
-      <div class="list-header">
-        <div class="section-title">Recurring Orders</div>
-        <button class="reset-btn" onclick="resetChecks()">Reset All</button>
+      <div class="orders-header-row">
+        <div class="section-title">Due Soon → Later</div>
+        <button class="add-item-btn" onclick="openAddItemModal()">+ Add Item</button>
       </div>
       <div id="items-list"></div>
     </div>
     <div class="card">
-      <div class="list-header">
-        <div class="section-title">Misc & Treats</div>
+      <div class="orders-header-row">
+        <div class="section-title">Misc &amp; Treats</div>
       </div>
       <div class="misc-section">
         <div class="misc-row">
-          <input class="misc-input" id="misc-name" placeholder="Item name" />
-          <input class="misc-price-input" id="misc-price" type="number" placeholder="$0.00" step="0.01" min="0" />
+          <input class="misc-input" id="misc-name" placeholder="Item name"/>
+          <input class="misc-price-input" id="misc-price" type="number" placeholder="$0.00" step="0.01" min="0"/>
           <button class="misc-add" onclick="addMisc()">+</button>
         </div>
         <div id="misc-list"></div>
@@ -328,87 +380,168 @@ body{color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;overscro
   </div>
   <div class="sort-row">
     <span class="sort-label">Sort:</span>
-    <button class="sort-btn active" id="sort-item" onclick="setSort('item',this)">By Item</button>
-    <button class="sort-btn" id="sort-month" onclick="setSort('month',this)">By Month</button>
+    <button class="sort-btn active" onclick="setSort('item',this)">By Item</button>
+    <button class="sort-btn" onclick="setSort('month',this)">By Month</button>
   </div>
 </div>
 
-<!-- DATE + PRICE MODAL -->
-<div class="overlay" id="overlay" onclick="closeModal(event)">
+<!-- PURCHASE MODAL -->
+<div class="overlay" id="overlay-purchase" onclick="closePurchaseModal(event)">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="modal-title"></div>
-    <div class="modal-sub">Log a purchase — update price if it changed</div>
+    <div class="modal-title" id="pm-title"></div>
+    <div class="modal-sub">Log a purchase — price updates automatically</div>
     <div class="modal-field-label">Purchase Date</div>
-    <input class="modal-date" type="date" id="modal-date" onchange="previewNext()" />
-    <div class="modal-price-row">
-      <div class="modal-price-label">Price Paid</div>
-      <input class="modal-price-input" type="number" id="modal-price" step="0.01" min="0" placeholder="0.00" />
+    <input class="modal-input" type="date" id="pm-date" onchange="previewNext()"/>
+    <div class="modal-field-label">Price Paid</div>
+    <input class="modal-price-input" type="number" id="pm-price" step="0.01" min="0" placeholder="0.00"/>
+    <div class="modal-next" id="pm-next"></div>
+    <button class="modal-done" onclick="savePurchaseModal()">Save Purchase</button>
+  </div>
+</div>
+
+<!-- EDIT ITEM MODAL -->
+<div class="overlay" id="overlay-edit" onclick="closeEditModal(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="em-title">Edit Item</div>
+    <div class="modal-sub">Hold the name field 2 sec to unlock renaming</div>
+    <div class="modal-field-label">Item Name</div>
+    <div style="position:relative">
+      <input class="modal-input" id="em-name" placeholder="Item name" readonly style="padding-right:48px;color:var(--muted)"
+        onmousedown="startNameHold()" ontouchstart="startNameHold()"
+        onmouseup="cancelNameHold()" ontouchend="cancelNameHold()"
+        onmouseleave="cancelNameHold()" ontouchcancel="cancelNameHold()"/>
+      <div id="em-name-lock" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none">🔒</div>
     </div>
-    <div class="modal-next" id="modal-next"></div>
-    <button class="modal-done" onclick="saveModal()">Save Purchase</button>
+    <div class="name-hold-hint" id="em-name-hint">Hold for 2 sec to enable editing</div>
+    <div class="modal-field-label">Category</div>
+    <div class="cat-options" id="em-cat-options">
+      <div class="cat-opt" data-cat="vitam" onclick="selectCat(this,'vitam')" style="color:var(--c-vitam)">Vitamins</div>
+      <div class="cat-opt" data-cat="food"  onclick="selectCat(this,'food')"  style="color:var(--c-food)">Food</div>
+      <div class="cat-opt" data-cat="litter" onclick="selectCat(this,'litter')" style="color:var(--c-litter)">Litter</div>
+      <div class="cat-opt" data-cat="misc"  onclick="selectCat(this,'misc')"  style="color:var(--c-misc)">Misc</div>
+    </div>
+    <div class="modal-field-label">Frequency</div>
+    <div class="freq-options" id="em-freq-options">
+      <div class="freq-opt" data-days="7"  onclick="selectFreq(this,7)"><div class="freq-opt-radio"><div class="freq-opt-radio-dot"></div></div><div class="freq-opt-label">Every week</div></div>
+      <div class="freq-opt" data-days="14" onclick="selectFreq(this,14)"><div class="freq-opt-radio"><div class="freq-opt-radio-dot"></div></div><div class="freq-opt-label">Every 2 weeks</div></div>
+      <div class="freq-opt" data-days="21" onclick="selectFreq(this,21)"><div class="freq-opt-radio"><div class="freq-opt-radio-dot"></div></div><div class="freq-opt-label">Every 3 weeks</div></div>
+      <div class="freq-opt" data-days="30" onclick="selectFreq(this,30)"><div class="freq-opt-radio"><div class="freq-opt-radio-dot"></div></div><div class="freq-opt-label">Monthly</div></div>
+      <div class="freq-opt" data-days="0"  onclick="selectFreq(this,0)"><div class="freq-opt-radio"><div class="freq-opt-radio-dot"></div></div><div class="freq-opt-label">Custom…</div></div>
+    </div>
+    <div class="freq-custom-row" id="em-custom-row" style="display:none">
+      <input class="freq-custom-input" type="number" id="em-custom-days" placeholder="Days" min="1" max="365"/>
+      <span class="freq-custom-label">days between orders</span>
+    </div>
+    <button class="modal-done" onclick="saveEditModal()">Save Changes</button>
+    <button class="modal-danger" id="em-delete-btn" onclick="deleteItem()">Remove Item</button>
+  </div>
+</div>
+
+<!-- ADD ITEM MODAL -->
+<div class="overlay" id="overlay-add" onclick="closeAddModal(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">New Recurring Item</div>
+    <div class="modal-sub">Add a new item to your orders</div>
+    <div class="modal-field-label">Item Name</div>
+    <input class="modal-input" id="ai-name" placeholder="e.g. Flea Treatment"/>
+    <div class="modal-field-label">Default Price</div>
+    <input class="modal-price-input" type="number" id="ai-price" step="0.01" min="0" placeholder="0.00"/>
+    <div class="modal-field-label">Category</div>
+    <div class="cat-options" id="ai-cat-options">
+      <div class="cat-opt sel" data-cat="vitam" onclick="selectCatAdd(this,'vitam')" style="color:var(--c-vitam);border-color:var(--c-vitam)">Vitamins</div>
+      <div class="cat-opt" data-cat="food"  onclick="selectCatAdd(this,'food')"  style="color:var(--c-food)">Food</div>
+      <div class="cat-opt" data-cat="litter" onclick="selectCatAdd(this,'litter')" style="color:var(--c-litter)">Litter</div>
+      <div class="cat-opt" data-cat="misc"  onclick="selectCatAdd(this,'misc')"  style="color:var(--c-misc)">Misc</div>
+    </div>
+    <div class="modal-field-label">Frequency</div>
+    <div class="freq-options" id="ai-freq-options">
+      <div class="freq-opt" data-days="7"  onclick="selectFreqAdd(this,7)"><div class="freq-opt-radio"><div class="freq-opt-radio-dot"></div></div><div class="freq-opt-label">Every week</div></div>
+      <div class="freq-opt sel" data-days="14" onclick="selectFreqAdd(this,14)"><div class="freq-opt-radio"><div class="freq-opt-radio-dot"></div></div><div class="freq-opt-label">Every 2 weeks</div></div>
+      <div class="freq-opt" data-days="21" onclick="selectFreqAdd(this,21)"><div class="freq-opt-radio"><div class="freq-opt-radio-dot"></div></div><div class="freq-opt-label">Every 3 weeks</div></div>
+      <div class="freq-opt" data-days="30" onclick="selectFreqAdd(this,30)"><div class="freq-opt-radio"><div class="freq-opt-radio-dot"></div></div><div class="freq-opt-label">Monthly</div></div>
+      <div class="freq-opt" data-days="0"  onclick="selectFreqAdd(this,0)"><div class="freq-opt-radio"><div class="freq-opt-radio-dot"></div></div><div class="freq-opt-label">Custom…</div></div>
+    </div>
+    <div class="freq-custom-row" id="ai-custom-row" style="display:none">
+      <input class="freq-custom-input" type="number" id="ai-custom-days" placeholder="Days" min="1" max="365"/>
+      <span class="freq-custom-label">days between orders</span>
+    </div>
+    <button class="modal-done" onclick="saveAddItem()">Add to Orders</button>
   </div>
 </div>
 
 <!-- TABBAR -->
 <div class="tabbar">
   <div class="tab active" id="tab-overview" onclick="switchTab('overview')">
-    <div class="tab-icon">📊</div>
-    <div class="tab-label">Overview</div>
+    <div class="tab-icon">📊</div><div class="tab-label">Overview</div>
   </div>
   <div class="tab" id="tab-orders" onclick="switchTab('orders')">
-    <div class="tab-icon">🛒</div>
-    <div class="tab-label">Orders</div>
+    <div class="tab-icon">🛒</div><div class="tab-label">Orders</div>
   </div>
   <div class="tab" id="tab-history" onclick="switchTab('history')">
-    <div class="tab-icon">📋</div>
-    <div class="tab-label">History</div>
+    <div class="tab-icon">📋</div><div class="tab-label">History</div>
   </div>
 </div>
 
 </div>
 <script>
-const ITEMS=[
-  {id:1,name:"Multivitamins",        price:16.14,freq:"Every 2 weeks",days:14,mult:2,   cat:"vitam"},
-  {id:2,name:"Immune Vitamins",      price:15.72,freq:"Every 2 weeks",days:14,mult:2,   cat:"vitam"},
-  {id:3,name:"Gut Health Vitamins",  price:12.22,freq:"Every 2 weeks",days:14,mult:2,   cat:"vitam"},
-  {id:4,name:"UTI Vitamins",         price:15.72,freq:"Every 2 weeks",days:14,mult:2,   cat:"vitam"},
-  {id:5,name:"Nulo Dry Food",        price:17.99,freq:"Monthly",      days:30,mult:1,   cat:"food"},
-  {id:6,name:"Nulo Topper",          price:12.99,freq:"Monthly",      days:30,mult:1,   cat:"food"},
-  {id:7,name:"Sheba Wet Food",       price:49.98,freq:"Monthly",      days:30,mult:1,   cat:"food"},
-  {id:8,name:"Cat Litter",           price:20.28,freq:"Every 3 weeks",days:21,mult:4/3, cat:"litter"},
+const BASE_ITEMS=[
+  {id:1,name:"Multivitamins",       price:16.14,days:14,cat:"vitam"},
+  {id:2,name:"Immune Vitamins",     price:15.72,days:14,cat:"vitam"},
+  {id:3,name:"Gut Health Vitamins", price:12.22,days:14,cat:"vitam"},
+  {id:4,name:"UTI Vitamins",        price:15.72,days:14,cat:"vitam"},
+  {id:5,name:"Nulo Dry Food",       price:17.99,days:30,cat:"food"},
+  {id:6,name:"Nulo Topper",         price:12.99,days:30,cat:"food"},
+  {id:7,name:"Sheba Wet Food",      price:49.98,days:30,cat:"food"},
+  {id:8,name:"Cat Litter",          price:20.28,days:21,cat:"litter"},
 ];
-
 const CATS={
-  vitam: {label:"Vitamins",color:"#f0c070"},
-  food:  {label:"Food",    color:"#4ecb8d"},
-  litter:{label:"Litter",  color:"#5ab4f5"},
-  misc:  {label:"Misc",    color:"#b07ef5"},
+  vitam:{label:"Vitamins",color:"#f0c070"},
+  food: {label:"Food",    color:"#4ecb8d"},
+  litter:{label:"Litter", color:"#5ab4f5"},
+  misc: {label:"Misc",    color:"#b07ef5"},
 };
+const FREQ_LABELS={7:"Every week",14:"Every 2 wks",21:"Every 3 wks",30:"Monthly"};
+function daysToMult(d){return 30/d}
+function daysToFreqLabel(d){return FREQ_LABELS[d]||`Every ${d}d`}
 
-// state.prices: overridden prices per item id
-// state.history: [{itemId, name, cat, price, date}]
-let state={checked:{},dates:{},prices:{},misc:[],history:[],chartOpen:false};
-let modalId=null,modalItem=null,histFilter='all',histSort='item';
+let state={dates:{},prices:{},misc:[],history:[],breakdownOpen:true,customItems:[],itemOverrides:{}};
+let histFilter='all',histSort='item';
+let modalId=null,modalItem=null;
+let editItemId=null,editCat='vitam',editDays=14;
+let addCat='vitam',addDays=14;
+let nameHoldTimer=null,nameUnlocked=false;
+let nextCustomId=1000;
 
-function load(){try{const s=localStorage.getItem('voidspend2');if(s)state=JSON.parse(s)}catch(e){}}
-function save(){try{localStorage.setItem('voidspend2',JSON.stringify(state))}catch(e){}}
+function load(){
+  try{
+    const s=localStorage.getItem('voidspend4');
+    if(s){state=JSON.parse(s);nextCustomId=Math.max(nextCustomId,...(state.customItems||[]).map(i=>i.id+1),1000)}
+  }catch(e){}
+}
+function save(){try{localStorage.setItem('voidspend4',JSON.stringify(state))}catch(e){}}
+
+function allItems(){
+  return[
+    ...BASE_ITEMS.map(i=>{
+      const ov=state.itemOverrides[i.id]||{};
+      const days=ov.days??i.days;
+      return{...i,name:ov.name??i.name,days,cat:ov.cat??i.cat,freq:daysToFreqLabel(days),mult:daysToMult(days)};
+    }),
+    ...(state.customItems||[]).map(i=>({...i,freq:daysToFreqLabel(i.days),mult:daysToMult(i.days)}))
+  ];
+}
 
 function itemPrice(item){return state.prices[item.id]??item.price}
 function mo(item){return itemPrice(item)*item.mult}
 
-function totals(){
-  const base=ITEMS.reduce((s,i)=>s+mo(i),0);
-  const miscT=state.misc.reduce((s,m)=>s+m.price,0);
-  const total=base+miscT;
-  const spent=ITEMS.filter(i=>state.checked[i.id]).reduce((s,i)=>s+itemPrice(i),0)
-    +state.misc.filter(m=>m.checked).reduce((s,m)=>s+m.price,0);
-  const totalItems=ITEMS.length+state.misc.length;
-  const checkedItems=Object.values(state.checked).filter(Boolean).length+state.misc.filter(m=>m.checked).length;
-  const catT={};
-  ITEMS.forEach(i=>{catT[i.cat]=(catT[i.cat]||0)+mo(i)});
-  catT.misc=miscT;
-  return{total,spent,remaining:total-spent,catT,cyclePct:totalItems>0?(checkedItems/totalItems)*100:0,checkedItems,totalItems};
+// Logged this calendar month from history
+function loggedThisMonth(){
+  const now=new Date();
+  const ym=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  return state.history.filter(e=>e.date&&e.date.startsWith(ym)).reduce((s,e)=>s+(e.price||0),0);
 }
 
 function dueInfo(item){
@@ -419,114 +552,183 @@ function dueInfo(item){
   return{next,diff:Math.round((next-today)/86400000)};
 }
 
-function lowStockItems(){return ITEMS.filter(i=>{const info=dueInfo(i);return info&&info.diff<=3})}
+function urgencyColor(info){
+  if(!info)return'rgba(255,255,255,0.12)';
+  if(info.diff<0)return'var(--danger)';
+  if(info.diff<=3)return'var(--warn)';
+  if(info.diff<=7)return'var(--accent)';
+  return'var(--green)';
+}
 
-const CIRC=2*Math.PI*32;
+// ===== OVERVIEW =====
+const CIRC=2*Math.PI*34;
 
 function renderOverview(){
-  const{total,spent,remaining,catT,cyclePct,checkedItems,totalItems}=totals();
-  document.getElementById('hero-amount').textContent='$'+total.toFixed(2);
-  document.getElementById('hero-sub').textContent='Estimated monthly pet budget';
-  document.getElementById('badge-spent').textContent='$'+spent.toFixed(2)+' ordered';
-  document.getElementById('badge-remaining').textContent='$'+Math.max(0,remaining).toFixed(2)+' remaining';
-  document.getElementById('badge-items').textContent=checkedItems+' of '+totalItems+' done';
-  const pct=Math.min(100,cyclePct);
-  document.getElementById('ring-pct').textContent=Math.round(pct)+'%';
-  document.getElementById('ring-arc').style.strokeDashoffset=CIRC*(1-pct/100);
+  const items=allItems();
+  const total=items.reduce((s,i)=>s+mo(i),0);
+  const miscTotal=state.misc.reduce((s,m)=>s+m.price,0);
+  const grand=total+miscTotal;
 
+  // Fixed = monthly items, Variable = non-monthly recurring
+  const fixed=items.filter(i=>i.days===30).reduce((s,i)=>s+mo(i),0);
+  const variable=items.filter(i=>i.days!==30).reduce((s,i)=>s+mo(i),0);
+
+  document.getElementById('hero-amount').textContent='$'+grand.toFixed(2);
+  document.getElementById('hero-sub').textContent='estimated monthly pet budget';
+  document.getElementById('split-fixed').textContent='$'+fixed.toFixed(2);
+  document.getElementById('split-variable').textContent='$'+variable.toFixed(2);
+  document.getElementById('split-misc').textContent='$'+miscTotal.toFixed(2);
+
+  // Ring = $ logged this month vs monthly estimate
+  const logged=loggedThisMonth();
+  const ringPct=grand>0?Math.min(1,logged/grand):0;
+  document.getElementById('ring-pct').textContent='$'+Math.round(logged);
+  document.getElementById('ring-arc').style.strokeDashoffset=CIRC*(1-ringPct);
+  // Color ring based on spend vs budget
+  const ringColor=ringPct>=1?'var(--danger)':ringPct>=0.75?'var(--warn)':'var(--green)';
+  document.getElementById('ring-arc').style.stroke=ringColor;
+  document.getElementById('logged-amount').textContent='$'+logged.toFixed(2);
+  document.getElementById('logged-amount').style.color=ringPct>=1?'var(--danger)':ringPct>=0.75?'var(--warn)':'var(--green)';
+
+  // Stacked bar — categories
+  const catT={};
+  items.forEach(i=>{catT[i.cat]=(catT[i.cat]||0)+mo(i)});
+  catT.misc=miscTotal;
   const track=document.getElementById('bar-track');
   const legend=document.getElementById('bar-legend');
   track.innerHTML='';legend.innerHTML='';
   Object.entries(catT).forEach(([cat,val])=>{
     if(val<=0)return;
-    const p=(val/total*100).toFixed(1);
-    const seg=document.createElement('div');
-    seg.className='bar-seg';seg.style.width=p+'%';seg.style.background=CATS[cat].color;
+    const p=(val/grand*100).toFixed(1);
+    const seg=document.createElement('div');seg.className='bar-seg';
+    seg.style.width=p+'%';seg.style.background=CATS[cat].color;
     track.appendChild(seg);
     const li=document.createElement('div');li.className='legend-item';
     li.innerHTML=`<div class="legend-dot" style="background:${CATS[cat].color}"></div>${CATS[cat].label}<span class="legend-amt">$${val.toFixed(0)}</span>`;
     legend.appendChild(li);
   });
 
-  const low=lowStockItems();
+  // Low stock
+  const low=allItems().filter(i=>{const info=dueInfo(i);return info&&info.diff<=3});
   const banner=document.getElementById('low-banner');
   if(low.length){
     banner.classList.add('show');
     document.getElementById('low-list').innerHTML=low.map(i=>{
       const info=dueInfo(i);
-      return info.diff<0?`${i.name} — overdue by ${Math.abs(info.diff)}d`:`${i.name} — due in ${info.diff}d`;
+      return info.diff<0?`${i.name} — overdue ${Math.abs(info.diff)}d`:`${i.name} — due in ${info.diff}d`;
     }).join('<br>');
   }else{banner.classList.remove('show')}
 
-  // chart
-  const chartBars=document.getElementById('chart-bars');
-  chartBars.innerHTML='';
-  const allItems=[
-    ...ITEMS.map(i=>({name:i.name,price:itemPrice(i),mo:mo(i),cat:i.cat,done:!!state.checked[i.id]})),
-    ...state.misc.map(m=>({name:m.name,price:m.price,mo:m.price,cat:'misc',done:m.checked}))
-  ];
-  const maxMo=Math.max(...allItems.map(i=>i.mo),1);
-  allItems.forEach(i=>{
-    const p=(i.mo/(maxMo*1.08)*100).toFixed(1);
-    const short=i.name.length>14?i.name.slice(0,13)+'…':i.name;
-    const row=document.createElement('div');row.className='chart-row';
-    row.innerHTML=`<div class="chart-name" title="${i.name}">${short}</div>
-      <div class="chart-bar-wrap"><div class="chart-bar-fill" style="width:${p}%;background:${CATS[i.cat].color};opacity:${i.done?0.25:1}">
-        <span class="chart-bar-val">$${i.price.toFixed(2)}</span></div></div>
-      <div class="chart-mo">$${i.mo.toFixed(0)}/mo</div>`;
-    chartBars.appendChild(row);
+  // Breakdown total
+  document.getElementById('breakdown-total').textContent='$'+grand.toFixed(2);
+  renderBreakdown(catT,items,grand);
+}
+
+function renderBreakdown(catT,items,grand){
+  const el=document.getElementById('breakdown-content');
+  el.innerHTML='';
+  const catOrder=['vitam','food','litter','misc'];
+  catOrder.forEach(cat=>{
+    const catItems=cat==='misc'?[]:items.filter(i=>i.cat===cat);
+    const catVal=catT[cat]||0;
+    if(catVal<=0&&catItems.length===0)return;
+    const grp=document.createElement('div');grp.className='bk-cat-group';
+    const color=CATS[cat].color;
+    grp.innerHTML=`<div class="bk-cat-header">
+      <div class="bk-cat-bar-left" style="background:${color}"></div>
+      <div class="bk-cat-info">
+        <div class="bk-cat-name" style="color:${color}">${CATS[cat].label}</div>
+        <div class="bk-cat-total">${catItems.length>0?catItems.length+' item'+(catItems.length>1?'s':''):'per order'}</div>
+      </div>
+      <div class="bk-cat-mo" style="color:${color}">$${catVal.toFixed(2)}<span style="font-size:10px;opacity:.5">/mo</span></div>
+    </div>`;
+    const maxMo=catItems.length>0?Math.max(...catItems.map(i=>mo(i)),1):1;
+    catItems.forEach(i=>{
+      const pct=(mo(i)/maxMo*100).toFixed(0);
+      const row=document.createElement('div');row.className='bk-item';
+      row.innerHTML=`
+        <div class="bk-item-name">${i.name}</div>
+        <div class="bk-item-bar-wrap"><div class="bk-item-bar-fill" style="width:${pct}%;background:${color}66"></div></div>
+        <div class="bk-item-price">$${itemPrice(i).toFixed(2)}</div>
+        <div class="bk-item-freq">${i.freq}</div>`;
+      grp.appendChild(row);
+    });
+    if(cat==='misc'&&state.misc.length===0){
+      const row=document.createElement('div');row.className='bk-item';
+      row.innerHTML=`<div class="bk-item-name" style="font-style:italic">None added yet</div>`;
+      grp.appendChild(row);
+    }
+    if(cat==='misc'){
+      state.misc.forEach(m=>{
+        const row=document.createElement('div');row.className='bk-item';
+        row.innerHTML=`<div class="bk-item-name">${m.name}</div><div class="bk-item-bar-wrap"><div class="bk-item-bar-fill" style="width:60%;background:${color}66"></div></div><div class="bk-item-price">$${m.price.toFixed(2)}</div><div class="bk-item-freq">per order</div>`;
+        grp.appendChild(row);
+      });
+    }
+    el.appendChild(grp);
   });
 }
 
-function toggleChart(){
-  state.chartOpen=!state.chartOpen;save();
-  document.getElementById('chart-body').classList.toggle('open',state.chartOpen);
-  document.getElementById('chart-caret').classList.toggle('open',state.chartOpen);
+function toggleBreakdown(){
+  state.breakdownOpen=!state.breakdownOpen;save();
+  document.getElementById('breakdown-body').classList.toggle('open',state.breakdownOpen);
+  document.getElementById('breakdown-caret').classList.toggle('open',state.breakdownOpen);
 }
 
+// ===== ORDERS — sorted by due date, no check-offs =====
 function renderOrders(){
   const list=document.getElementById('items-list');
   list.innerHTML='';
-  ITEMS.forEach(i=>{
-    const done=!!state.checked[i.id];
+  const items=allItems();
+
+  // Sort: overdue → due soon → upcoming → no date logged
+  function sortKey(item){
+    const info=dueInfo(item);
+    if(!info)return 9999;
+    return info.diff;
+  }
+  const sorted=[...items].sort((a,b)=>sortKey(a)-sortKey(b));
+
+  sorted.forEach(i=>{
     const info=dueInfo(i);
-    let dueHtml='';
-    if(info){
-      if(info.diff<0) dueHtml=`<span class="due-badge due-overdue">${Math.abs(info.diff)}d overdue</span>`;
-      else if(info.diff<=3) dueHtml=`<span class="due-badge due-low">Due ${info.diff}d</span>`;
-      else if(info.diff<=6) dueHtml=`<span class="due-badge due-soon">Due ${info.diff}d</span>`;
-      else dueHtml=`<span class="due-badge due-ok">${info.diff}d left</span>`;
-    }
     const lastDate=state.dates[i.id]
       ?new Date(state.dates[i.id]).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})
       :null;
     const curPrice=itemPrice(i);
-    const div=document.createElement('div');
-    div.className='item'+(done?' done':'');
+
+    let dueHtml='';
+    let barColor=urgencyColor(info);
+    if(!info){
+      dueHtml=`<span class="due-badge due-unset">No date logged</span>`;
+    }else if(info.diff<0){
+      dueHtml=`<span class="due-badge due-overdue">Overdue ${Math.abs(info.diff)}d</span>`;
+    }else if(info.diff===0){
+      dueHtml=`<span class="due-badge due-overdue">Due today</span>`;
+    }else if(info.diff<=3){
+      dueHtml=`<span class="due-badge due-soon">Due in ${info.diff}d</span>`;
+    }else if(info.diff<=7){
+      dueHtml=`<span class="due-badge due-upcoming">Due in ${info.diff}d</span>`;
+    }else{
+      const nd=info.next.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+      dueHtml=`<span class="due-badge due-ok">Next ${nd}</span>`;
+    }
+
+    const div=document.createElement('div');div.className='pitem';
     div.innerHTML=`
-      <div class="check${done?' on':''}">
-        <svg width="11" height="8" viewBox="0 0 11 8" fill="none">
-          <path d="M1 3.5L4 6.5L10 1" stroke="#08080b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <div class="item-body">
-        <div class="item-name">${i.name}</div>
-        <div class="item-meta">
+      <div class="pitem-bar" style="background:${barColor}"></div>
+      <div class="pitem-body">
+        <div class="pitem-name">${i.name}</div>
+        <div class="pitem-meta">
           <span>${i.freq}</span>
           <span class="cat-tag" style="background:${CATS[i.cat].color}22;color:${CATS[i.cat].color}">${CATS[i.cat].label}</span>
           ${dueHtml}
         </div>
       </div>
-      <div class="date-chip" onclick="openModal(event,${i.id})">
+      <button class="item-edit-btn" onclick="openEditModal(event,${i.id})">✏️</button>
+      <div class="date-chip" onclick="openPurchaseModal(event,${i.id})">
         <div class="date-chip-price">$${curPrice.toFixed(2)}</div>
-        ${lastDate
-          ?`<div class="date-chip-date">📅 ${lastDate}</div>`
-          :`<div class="date-chip-unset">Tap to log</div>`}
+        ${lastDate?`<div class="date-chip-date">📅 ${lastDate}</div>`:`<div class="date-chip-unset">Tap to log</div>`}
       </div>`;
-    div.addEventListener('click',e=>{
-      if(e.target.closest('.date-chip'))return;
-      state.checked[i.id]=!state.checked[i.id];save();render();
-    });
     list.appendChild(div);
   });
 
@@ -534,26 +736,16 @@ function renderOrders(){
   miscList.innerHTML='';
   document.getElementById('misc-empty').style.display=state.misc.length?'none':'block';
   state.misc.forEach((m,idx)=>{
-    const div=document.createElement('div');
-    div.className='misc-item'+(m.checked?' done':'');
+    const div=document.createElement('div');div.className='misc-item';
     div.innerHTML=`
-      <div class="check${m.checked?' on':''}">
-        <svg width="11" height="8" viewBox="0 0 11 8" fill="none">
-          <path d="M1 3.5L4 6.5L10 1" stroke="#08080b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
       <div class="misc-item-name">${m.name}</div>
       <div class="misc-item-price">$${m.price.toFixed(2)}</div>
       <button class="misc-remove" onclick="removeMisc(event,${idx})">×</button>`;
-    div.addEventListener('click',e=>{
-      if(e.target.closest('.misc-remove'))return;
-      state.misc[idx].checked=!state.misc[idx].checked;save();render();
-    });
     miscList.appendChild(div);
   });
 }
 
-/* ---- HISTORY ---- */
+// ===== HISTORY =====
 function renderHistory(){
   const hl=document.getElementById('history-list');
   hl.innerHTML='';
@@ -562,9 +754,7 @@ function renderHistory(){
     hl.innerHTML=`<div class="history-empty">No purchase history yet.<br>Log dates in the Orders tab<br>to start tracking here.</div>`;
     return;
   }
-
   if(histSort==='item'){
-    // Group by item name
     const groups={};
     filtered.forEach(e=>{
       const key=e.itemId!=null?'item_'+e.itemId:'misc_'+e.name;
@@ -573,61 +763,48 @@ function renderHistory(){
     });
     Object.values(groups).forEach(g=>{
       g.entries.sort((a,b)=>new Date(b.date)-new Date(a.date));
-      const grp=document.createElement('div');
-      grp.className='history-group';
+      const grp=document.createElement('div');grp.className='history-group';
       grp.innerHTML=`<div class="history-group-header">
         <div class="history-group-name">${g.name}</div>
-        <div class="history-group-cat" style="background:${CATS[g.cat].color}22;color:${CATS[g.cat].color}">${CATS[g.cat].label}</div>
+        <div class="history-group-cat" style="background:${CATS[g.cat]?.color||'#888'}22;color:${CATS[g.cat]?.color||'#888'}">${CATS[g.cat]?.label||'Misc'}</div>
       </div>`;
-      g.entries.forEach(e=>{
-        const row=buildHistoryRow(e,g.cat);
-        grp.appendChild(row);
-      });
+      g.entries.forEach(e=>grp.appendChild(buildHistoryRow(e,g.cat)));
       hl.appendChild(grp);
     });
-
-  } else {
-    // Group by month — key: "YYYY-MM"
+  }else{
     const months={};
     filtered.forEach(e=>{
       const key=e.date.slice(0,7);
       if(!months[key])months[key]={entries:[],total:0};
-      months[key].entries.push(e);
-      months[key].total+=(e.price||0);
+      months[key].entries.push(e);months[key].total+=(e.price||0);
     });
-    // Sort months newest first
     Object.keys(months).sort((a,b)=>b.localeCompare(a)).forEach(mkey=>{
       const{entries,total}=months[mkey];
-      const d=new Date(mkey+'-02');
-      const label=d.toLocaleDateString('en-US',{month:'long',year:'numeric'});
-      const grp=document.createElement('div');
-      grp.className='month-group';
+      const label=new Date(mkey+'-02').toLocaleDateString('en-US',{month:'long',year:'numeric'});
+      const grp=document.createElement('div');grp.className='month-group';
       grp.innerHTML=`<div class="month-group-header">
         <div class="month-group-name">${label}</div>
         <div class="month-group-total">$${total.toFixed(2)}</div>
       </div>`;
-      // Sort entries within month newest first
       entries.sort((a,b)=>new Date(b.date)-new Date(a.date));
-      entries.forEach(e=>{
-        const row=buildHistoryRow(e,e.cat);
-        grp.appendChild(row);
-      });
+      entries.forEach(e=>grp.appendChild(buildHistoryRow(e,e.cat)));
       hl.appendChild(grp);
     });
   }
 }
 
 function buildHistoryRow(e,cat){
-  const row=document.createElement('div');
-  row.className='history-entry';
+  const row=document.createElement('div');row.className='history-entry';
   const d=new Date(e.date).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
-  const showName=histSort==='month'?`<span style="flex:1;font-size:13px;color:var(--text)">${e.name}</span>`:'';
+  const nameSpan=histSort==='month'?`<span style="flex:1;font-size:13px;color:var(--text)">${e.name}</span>`:'';
+  const sd=e.date.replace(/'/g,"\\'");
+  const sn=(e.name||'').replace(/'/g,"\\'");
   row.innerHTML=`
-    <div class="history-dot" style="background:${CATS[cat].color}"></div>
+    <div class="history-dot" style="background:${CATS[cat]?.color||'#888'}"></div>
     <div class="history-date">${d}</div>
-    ${showName}
+    ${nameSpan}
     <div class="history-price">$${(e.price||0).toFixed(2)}</div>
-    <button class="history-del" onclick="deleteHistory(event,'${e.date}',${e.itemId!=null?e.itemId:'null'},'${e.name.replace(/'/g,"\\'")}')" aria-label="Delete">×</button>`;
+    <button class="history-del" onclick="deleteHistory(event,'${sd}',${e.itemId!=null?e.itemId:'null'},'${sn}')" aria-label="Delete">×</button>`;
   return row;
 }
 
@@ -635,111 +812,177 @@ function deleteHistory(e,date,itemId,name){
   e.stopPropagation();
   const id=itemId==='null'?null:Number(itemId);
   state.history=state.history.filter(h=>!(h.date===date&&(h.itemId===id||(h.itemId==null&&h.name===name))));
-  save();renderHistory();
+  save();renderHistory();renderOverview();
 }
 
-function setFilter(cat,btn){
-  histFilter=cat;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderHistory();
-}
-function setSort(s,btn){
-  histSort=s;
-  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderHistory();
-}
+function setFilter(cat,btn){histFilter=cat;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderHistory()}
+function setSort(s,btn){histSort=s;document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderHistory()}
 
 function render(){renderOverview();renderOrders();renderHistory();}
 
-/* ---- MODAL ---- */
-function openModal(e,id){
+// ===== PURCHASE MODAL =====
+function openPurchaseModal(e,id){
   e.stopPropagation();
-  modalId=id;
-  modalItem=ITEMS.find(i=>i.id===id);
-  document.getElementById('modal-title').textContent=modalItem.name;
-  document.getElementById('modal-date').value=state.dates[id]||'';
-  document.getElementById('modal-price').value=(state.prices[id]??modalItem.price).toFixed(2);
-  document.getElementById('modal-next').classList.remove('show');
-  document.getElementById('overlay').classList.add('open');
+  modalId=id;modalItem=allItems().find(i=>i.id===id);
+  document.getElementById('pm-title').textContent=modalItem.name;
+  document.getElementById('pm-date').value=state.dates[id]||'';
+  document.getElementById('pm-price').value=(state.prices[id]??modalItem.price).toFixed(2);
+  document.getElementById('pm-next').classList.remove('show');
+  document.getElementById('overlay-purchase').classList.add('open');
   previewNext();
 }
-function closeModal(e){
-  if(e.target===document.getElementById('overlay'))document.getElementById('overlay').classList.remove('open');
-}
+function closePurchaseModal(e){if(e.target===document.getElementById('overlay-purchase'))document.getElementById('overlay-purchase').classList.remove('open')}
 function previewNext(){
-  const val=document.getElementById('modal-date').value;
-  const el=document.getElementById('modal-next');
+  const val=document.getElementById('pm-date').value;
+  const el=document.getElementById('pm-next');
   if(!val||!modalItem){el.classList.remove('show');return}
   const next=new Date(val);next.setDate(next.getDate()+modalItem.days);
   el.textContent='Next order due: '+next.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
   el.classList.add('show');
 }
-function saveModal(){
-  const val=document.getElementById('modal-date').value;
-  const priceVal=parseFloat(document.getElementById('modal-price').value);
+function savePurchaseModal(){
+  const val=document.getElementById('pm-date').value;
+  const priceVal=parseFloat(document.getElementById('pm-price').value);
   if(!modalId||!val)return;
-
-  // Update price override
-  if(!isNaN(priceVal)&&priceVal>0){
-    state.prices[modalId]=priceVal;
-  }
+  if(!isNaN(priceVal)&&priceVal>0)state.prices[modalId]=priceVal;
   const usedPrice=(!isNaN(priceVal)&&priceVal>0)?priceVal:itemPrice(modalItem);
-
-  // Add to history only if date is new
   const existing=state.dates[modalId];
   if(val!==existing){
     state.history.push({itemId:modalId,name:modalItem.name,cat:modalItem.cat,price:usedPrice,date:val});
-  } else {
-    // Update price in the latest history entry for this date
+  }else{
     const entry=state.history.find(h=>h.itemId===modalId&&h.date===val);
     if(entry)entry.price=usedPrice;
   }
   state.dates[modalId]=val;
   save();render();
-  document.getElementById('overlay').classList.remove('open');
+  document.getElementById('overlay-purchase').classList.remove('open');
 }
 
+// ===== EDIT MODAL =====
+function openEditModal(e,id){
+  e.stopPropagation();
+  editItemId=id;nameUnlocked=false;
+  const item=allItems().find(i=>i.id===id);
+  document.getElementById('em-title').textContent='Edit: '+item.name;
+  const nameEl=document.getElementById('em-name');
+  nameEl.value=item.name;nameEl.readOnly=true;nameEl.style.color='var(--muted)';
+  document.getElementById('em-name-lock').textContent='🔒';
+  document.getElementById('em-name-hint').textContent='Hold for 2 sec to enable editing';
+  editCat=item.cat;
+  document.querySelectorAll('#em-cat-options .cat-opt').forEach(o=>{
+    const c=o.dataset.cat;o.classList.toggle('sel',c===editCat);
+    o.style.borderColor=c===editCat?CATS[c].color:CATS[c].color+'22';
+  });
+  editDays=item.days;
+  syncFreqPicker('em-freq-options','em-custom-row','em-custom-days',editDays);
+  const isCustom=(state.customItems||[]).some(ci=>ci.id===id);
+  document.getElementById('em-delete-btn').style.display=isCustom?'block':'none';
+  document.getElementById('overlay-edit').classList.add('open');
+}
+function closeEditModal(e){if(e.target===document.getElementById('overlay-edit'))document.getElementById('overlay-edit').classList.remove('open')}
+
+function startNameHold(){cancelNameHold();nameHoldTimer=setTimeout(()=>{
+  nameUnlocked=true;
+  const nameEl=document.getElementById('em-name');
+  nameEl.readOnly=false;nameEl.style.color='var(--text)';
+  document.getElementById('em-name-lock').textContent='🔓';
+  document.getElementById('em-name-hint').textContent='Name is now editable';
+  nameEl.focus();
+},2000)}
+function cancelNameHold(){if(nameHoldTimer){clearTimeout(nameHoldTimer);nameHoldTimer=null}}
+
+function selectCat(el,cat){
+  editCat=cat;
+  document.querySelectorAll('#em-cat-options .cat-opt').forEach(o=>{
+    const c=o.dataset.cat;o.classList.toggle('sel',c===cat);o.style.borderColor=c===cat?CATS[c].color:CATS[c].color+'22';
+  });
+}
+function selectFreq(el,days){editDays=days;syncFreqPicker('em-freq-options','em-custom-row','em-custom-days',days)}
+function syncFreqPicker(optId,crId,ciId,days){
+  const known=[7,14,21,30];const isC=!known.includes(days);
+  document.querySelectorAll('#'+optId+' .freq-opt').forEach(o=>{const d=parseInt(o.dataset.days);o.classList.toggle('sel',isC?d===0:d===days)});
+  document.getElementById(crId).style.display=isC||days===0?'flex':'none';
+  if(isC&&days>0)document.getElementById(ciId).value=days;
+}
+function saveEditModal(){
+  const newName=document.getElementById('em-name').value.trim();
+  let days=editDays;
+  if(days===0){const cv=parseInt(document.getElementById('em-custom-days').value);if(isNaN(cv)||cv<1){alert('Enter valid days');return}days=cv}
+  const isCustom=(state.customItems||[]).some(ci=>ci.id===editItemId);
+  if(isCustom){
+    const idx=state.customItems.findIndex(ci=>ci.id===editItemId);
+    if(idx>=0){if(newName)state.customItems[idx].name=newName;state.customItems[idx].days=days;state.customItems[idx].cat=editCat;state.customItems[idx].freq=daysToFreqLabel(days);state.customItems[idx].mult=daysToMult(days)}
+  }else{
+    if(!state.itemOverrides)state.itemOverrides={};
+    const ov=state.itemOverrides[editItemId]||{};
+    if(nameUnlocked&&newName)ov.name=newName;
+    ov.days=days;ov.cat=editCat;
+    state.itemOverrides[editItemId]=ov;
+  }
+  save();render();document.getElementById('overlay-edit').classList.remove('open');
+}
+function deleteItem(){
+  if(!confirm('Remove this item?'))return;
+  state.customItems=(state.customItems||[]).filter(ci=>ci.id!==editItemId);
+  delete state.dates[editItemId];delete state.prices[editItemId];
+  save();render();document.getElementById('overlay-edit').classList.remove('open');
+}
+
+// ===== ADD ITEM =====
+function openAddItemModal(){
+  addCat='vitam';addDays=14;
+  document.getElementById('ai-name').value='';document.getElementById('ai-price').value='';
+  document.querySelectorAll('#ai-cat-options .cat-opt').forEach(o=>{const c=o.dataset.cat;o.classList.toggle('sel',c==='vitam');o.style.borderColor=c==='vitam'?CATS[c].color:CATS[c].color+'22'});
+  syncFreqPicker('ai-freq-options','ai-custom-row','ai-custom-days',14);
+  document.getElementById('overlay-add').classList.add('open');
+}
+function closeAddModal(e){if(e.target===document.getElementById('overlay-add'))document.getElementById('overlay-add').classList.remove('open')}
+function selectCatAdd(el,cat){addCat=cat;document.querySelectorAll('#ai-cat-options .cat-opt').forEach(o=>{const c=o.dataset.cat;o.classList.toggle('sel',c===cat);o.style.borderColor=c===cat?CATS[c].color:CATS[c].color+'22'})}
+function selectFreqAdd(el,days){addDays=days;syncFreqPicker('ai-freq-options','ai-custom-row','ai-custom-days',days)}
+function saveAddItem(){
+  const name=document.getElementById('ai-name').value.trim();
+  const price=parseFloat(document.getElementById('ai-price').value);
+  if(!name){alert('Enter a name');return}if(isNaN(price)||price<=0){alert('Enter a valid price');return}
+  let days=addDays;
+  if(days===0){const cv=parseInt(document.getElementById('ai-custom-days').value);if(isNaN(cv)||cv<1){alert('Enter valid days');return}days=cv}
+  const cap=name.charAt(0).toUpperCase()+name.slice(1);
+  if(!state.customItems)state.customItems=[];
+  state.customItems.push({id:nextCustomId++,name:cap,price,days,cat:addCat,custom:true,freq:daysToFreqLabel(days),mult:daysToMult(days)});
+  save();render();document.getElementById('overlay-add').classList.remove('open');
+}
+
+// ===== MISC =====
 function addMisc(){
   const name=document.getElementById('misc-name').value.trim();
   const price=parseFloat(document.getElementById('misc-price').value);
   if(!name||isNaN(price)||price<=0)return;
   const cap=name.charAt(0).toUpperCase()+name.slice(1);
-  state.misc.push({name:cap,price,checked:false});
+  state.misc.push({name:cap,price});
   const today=new Date().toISOString().slice(0,10);
   state.history.push({itemId:null,name:cap,cat:'misc',price,date:today});
-  document.getElementById('misc-name').value='';
-  document.getElementById('misc-price').value='';
+  document.getElementById('misc-name').value='';document.getElementById('misc-price').value='';
   save();render();
 }
-function removeMisc(e,idx){
-  e.stopPropagation();
-  state.misc.splice(idx,1);save();render();
-}
-function resetChecks(){
-  if(!confirm('Reset all check-offs for this cycle?'))return;
-  state.checked={};save();render();
-}
+function removeMisc(e,idx){e.stopPropagation();state.misc.splice(idx,1);save();render()}
 
 function switchTab(tab){
   ['overview','orders','history'].forEach(t=>{
     document.getElementById('view-'+t).classList.toggle('active',t===tab);
     document.getElementById('tab-'+t).classList.toggle('active',t===tab);
   });
-  document.getElementById('history-controls').style.display=tab==='history'?'block':'none';
+  document.getElementById('history-controls').style.display=tab==='history'?'flex':'none';
   document.getElementById('main-scroll').scrollTop=0;
 }
 
-function initChart(){
-  if(state.chartOpen){
-    document.getElementById('chart-body').classList.add('open');
-    document.getElementById('chart-caret').classList.add('open');
+function initBreakdown(){
+  if(state.breakdownOpen!==false){
+    document.getElementById('breakdown-body').classList.add('open');
+    document.getElementById('breakdown-caret').classList.add('open');
   }
 }
 
 document.getElementById('month-label').textContent=new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'});
-load();initChart();render();
+load();initBreakdown();render();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
